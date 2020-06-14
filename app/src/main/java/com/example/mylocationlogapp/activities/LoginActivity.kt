@@ -108,7 +108,9 @@ class LoginActivity : BaseActivity() {
             MySharedPref.setIsLoggedIn(true)
             val intent =Intent(this,DashboardActivity::class.java)
             startActivity(intent)
+
             MyBackgroundLocationService.startService(this,"Service Start")
+            finish()
         }
 
        /*
