@@ -34,6 +34,8 @@ class MyBackgroundLocationService : Service() {
 
     private lateinit var latLng:LatLng
 
+    private val LOCATION_UPDATE_INTERVAL :Long=1000*1*60; //15seconds
+
     companion object {
         /*This companion is like static in java*/
         fun startService(context: Context, message: String) {
@@ -68,11 +70,12 @@ class MyBackgroundLocationService : Service() {
                     MyApplicationClass.globalLog(TAG,"lat:${location.latitude} lng:${location.longitude}")
                     //todo:insert into db
                     latLng=LatLng(location.latitude,location.longitude)
+                    saveTheLocation()
                 }
             }
         }
 
-        locationRequest=LocationRequest().setInterval(1000*5)
+        locationRequest=LocationRequest().setInterval(LOCATION_UPDATE_INTERVAL)
 
         startLocationUpdates()
     }
@@ -94,7 +97,7 @@ class MyBackgroundLocationService : Service() {
             .build()
         startForeground(1, notification)
         //stopSelf();
-        return START_NOT_STICKY
+        return START_STICKY
     }
 
     private fun createNotificationChannel() {

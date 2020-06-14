@@ -12,17 +12,22 @@ import com.example.mylocationlogapp.R
 import com.example.mylocationlogapp.activities.MapsActivityWithPlay
 import com.example.mylocationlogapp.helper.MyConstants
 import com.example.mylocationlogapp.modal.MyLocationModal
+import java.text.SimpleDateFormat
 
 class MyLocationAdapter(val myLocationList: List<MyLocationModal>?,val context :Context) :
     RecyclerView.Adapter<MyLocationAdapter.MyViewHolder>() {
 
+    val simpleDateFormat= SimpleDateFormat(MyConstants.MY_DATE_FORMAT,MyConstants.MYGLOBAL_LOCALE)
+
     class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         var myLocationText: TextView? = null
+        var dateTime: TextView? = null
         var myLocationLayout: ConstraintLayout? = null
 
         init {
             myLocationText = itemView.findViewById(R.id.latitudeAndLongitude)
             myLocationLayout = itemView.findViewById(R.id.myLocationLayoutItem)
+            dateTime = itemView.findViewById(R.id.dateTime)
         }
 
 
@@ -46,6 +51,8 @@ class MyLocationAdapter(val myLocationList: List<MyLocationModal>?,val context :
         var oneLocation = myLocationList?.get(position)
         holder.myLocationText?.text =
             "Lat: ${oneLocation?.latitude}\nLng: ${oneLocation?.longitude}"
+
+        holder.dateTime?.setText(simpleDateFormat.format(oneLocation?.dateTime))
 
         holder.myLocationLayout?.setOnClickListener({
                 val intent = Intent(context,MapsActivityWithPlay::class.java)

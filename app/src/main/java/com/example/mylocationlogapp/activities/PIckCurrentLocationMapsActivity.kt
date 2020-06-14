@@ -83,7 +83,7 @@ class PIckCurrentLocationMapsActivity : BaseActivity(), OnMapReadyCallback {
     private fun checkPermissions(): Boolean {
         val permissionState = ActivityCompat.checkSelfPermission(
             this,
-            Manifest.permission.ACCESS_COARSE_LOCATION
+            Manifest.permission.ACCESS_FINE_LOCATION
         )
         return permissionState == PackageManager.PERMISSION_GRANTED
     }
@@ -91,7 +91,7 @@ class PIckCurrentLocationMapsActivity : BaseActivity(), OnMapReadyCallback {
     private fun startLocationPermissionRequest() {
         ActivityCompat.requestPermissions(
             this@PIckCurrentLocationMapsActivity,
-            arrayOf(Manifest.permission.ACCESS_COARSE_LOCATION),
+            arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
             REQUEST_PERMISSIONS_REQUEST_CODE
         )
     }
@@ -99,7 +99,7 @@ class PIckCurrentLocationMapsActivity : BaseActivity(), OnMapReadyCallback {
     private fun requestPermissions() {
         val shouldProvideRationale = ActivityCompat.shouldShowRequestPermissionRationale(
             this,
-            Manifest.permission.ACCESS_COARSE_LOCATION
+            Manifest.permission.ACCESS_FINE_LOCATION
         )
         // Provide an additional rationale to the user. This would happen if the user denied the
         // request previously, but didn't check the "Don't ask again" checkbox.
