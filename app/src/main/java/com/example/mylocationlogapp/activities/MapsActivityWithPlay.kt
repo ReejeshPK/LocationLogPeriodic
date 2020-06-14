@@ -1,5 +1,6 @@
 package com.example.mylocationlogapp.activities
 
+import android.os.AsyncTask
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.example.mylocationlogapp.BaseActivity
@@ -19,14 +20,14 @@ import kotlinx.android.synthetic.main.activity_maps_with_play.*
 
 class MapsActivityWithPlay : BaseActivity(), OnMapReadyCallback {
 
-    private lateinit var mMap: GoogleMap
+    lateinit var mMap: GoogleMap
 
     private var idSelected: Int? = null
     private val TAG: String = MapsActivityWithPlay::class.java.simpleName.toString()
 
     private lateinit var realm: Realm
-    private var selectedLocation: MyLocationModal ?=null
-    private var locationListForThisUser:List<MyLocationModal>?=null
+    private var selectedLocation: MyLocationModal? = null
+    var locationListForThisUser: List<MyLocationModal>? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,6 +49,7 @@ class MapsActivityWithPlay : BaseActivity(), OnMapReadyCallback {
         }
 
         playButton.setOnClickListener({
+            navigateAndPlayTask().execute()
 
         })
 
@@ -60,18 +62,22 @@ class MapsActivityWithPlay : BaseActivity(), OnMapReadyCallback {
     }
 
     private fun getThisIdAndUserDetails() {
-       selectedLocation= realm.where(MyLocationModal::class.java).equalTo("id",idSelected)
-            .equalTo("user_id",MySharedPref.getCurrentUserId()).findFirst()
+        selectedLocation = realm.where(MyLocationModal::class.java).equalTo("id", idSelected)
+            .equalTo("user_id", MySharedPref.getCurrentUserId()).findFirst()
 
-        locationListForThisUser=realm.where(MyLocationModal::class.java).equalTo("user_id",MySharedPref.getCurrentUserId()).findAll()
+        /*locationListForThisUser = realm.where(MyLocationModal::class.java)
+            .equalTo("user_id", MySharedPref.getCurrentUserId()).findAll()*/
 
-        if(selectedLocation!=null) {
+        if (selectedLocation != null) {
 
-            var curloc = selectedLocation!!.latitude?.let { selectedLocation!!.longitude?.let { it1 ->
-                LatLng(it,
-                    it1
-                )
-            } }
+            var curloc = selectedLocation!!.latitude?.let {
+                selectedLocation!!.longitude?.let { it1 ->
+                    LatLng(
+                        it,
+                        it1
+                    )
+                }
+            }
 
             mMap.addMarker(MarkerOptions().position(curloc!!).title("Marker in Selected Location"))
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(curloc, 16.0f))
@@ -79,5 +85,48 @@ class MapsActivityWithPlay : BaseActivity(), OnMapReadyCallback {
     }
 
 
+    inner class navigateAndPlayTask() :
+        AsyncTask<Void, LatLng, String>() {
+        private lateinit var realm2: Realm
+        // List<MyLocationModal>
+        override fun onPreExecute() {
+            super.onPreExecute()
+
+        }
+
+        override fun doInBackground(vararg params: Void?): String {
+            try {
+                realm2 = Realm.getDefaultInstance()
+
+                realm2.beginTransaction()
+                realm2.commitTransaction()
+
+                var locationListForThis = realm2.where(MyLocationModal::class.java)
+                    .equalTo("user_id", MySharedPref.getCurrentUserId()).findAll()
+                locationListForThis.forEach({
+                    var curLoc =
+                        it.latitude?.let { it1 -> it.longitude?.let { it2 -> LatLng(it1, it2) } }
+                    onProgressUpdate(curLoc)
+                    Thread.sleep(1500)
+                })
+            } finally {
+                if (realm2 != null) {
+                    realm2.close();
+                }
+            }
+            return ""
+        }
+
+        override fun onProgressUpdate(vararg latlngg: LatLng?) {
+            super.onProgressUpdate(*latlngg)
+            logd("location:", "" + latlngg)
+            runOnUiThread({
+                mMap.addMarker(MarkerOptions().position(latlngg[0]!!).title("Marker in Selected Location"))
+                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latlngg[0], 16.0f))
+            })
+
+        }
+
+    }
 
 }
