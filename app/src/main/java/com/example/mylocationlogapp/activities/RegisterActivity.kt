@@ -2,15 +2,20 @@ package com.example.mylocationlogapp.activities
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
+import android.widget.Toast
+import com.example.mylocationlogapp.BaseActivity
 import com.example.mylocationlogapp.R
+import com.example.mylocationlogapp.modal.MyUser
 import io.realm.Realm
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.activity_register.*
 
-class RegisterActivity : AppCompatActivity() {
+class RegisterActivity : BaseActivity() {
 
     private lateinit var realm : Realm
+    private val TAG : String = RegisterActivity::class.simpleName.toString()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,7 +35,35 @@ class RegisterActivity : AppCompatActivity() {
     }
 
     private fun signUpFunction() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+
+        realm.executeTransactionAsync( {
+            var lastInsertedId=it.where(MyUser::class.java).max("id")
+            var nextId : Int ?=null
+            if(lastInsertedId==null){
+                nextId=1;
+                Log.d(TAG,"first insert")
+            }
+            else{
+                nextId=lastInsertedId.toInt()+1
+                logd(TAG,"next insert"+nextId)
+            }
+            var myuser = MyUser()
+            myuser.id=nextId
+            myuser.userName=userNameEditTextRegister.text.toString()
+            myuser.password=passwordEditTextRegister.text.toString()
+
+            it.insertOrUpdate(myuser)
+        },{
+            //on success
+            Toast.makeText(this,"Registered Successfully",Toast.LENGTH_SHORT).show()
+            finish()
+        },{
+            //onerror
+            Toast.makeText(this,"Sorry, something went wrong, please try again",Toast.LENGTH_SHORT).show()
+            loge(TAG,"error:"+it.message)
+        })
+
+
     }
 
     private fun formValid(): Boolean {

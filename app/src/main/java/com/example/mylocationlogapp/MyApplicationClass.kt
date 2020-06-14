@@ -1,4 +1,4 @@
-package com.example.mylocationlogapp.activities
+package com.example.mylocationlogapp
 
 import android.app.Application
 import io.realm.Realm
