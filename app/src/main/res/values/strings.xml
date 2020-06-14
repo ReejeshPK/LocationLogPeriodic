@@ -22,4 +22,8 @@
     <string name="no_data_found">No Data Found</string>
     <string name="title_activity_p_ick_current_location_maps">Map</string>
     <string name="save_location">Save Location</string>
+    <string name="permission_denied_explanation">Location Permission Denied</string>
+    <string name="settings">Check Settings</string>
+    <string name="no_location_detected">Location Not Detected</string>
+    <string name="permission_rationale">This App requires location permission to get your current location</string>
 </resources>
