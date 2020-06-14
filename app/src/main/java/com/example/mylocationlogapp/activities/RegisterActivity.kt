@@ -9,7 +9,7 @@ import com.example.mylocationlogapp.BaseActivity
 import com.example.mylocationlogapp.R
 import com.example.mylocationlogapp.modal.MyUser
 import io.realm.Realm
-import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.activity_main_login.*
 import kotlinx.android.synthetic.main.activity_register.*
 
 class RegisterActivity : BaseActivity() {
@@ -38,6 +38,7 @@ class RegisterActivity : BaseActivity() {
 
         realm.executeTransactionAsync( {
             var lastInsertedId=it.where(MyUser::class.java).max("id")
+            /*We are doing this since realm does not have auto increment feature*/
             var nextId : Int ?=null
             if(lastInsertedId==null){
                 nextId=1;
