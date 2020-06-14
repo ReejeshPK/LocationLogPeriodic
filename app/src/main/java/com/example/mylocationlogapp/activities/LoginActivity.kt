@@ -6,6 +6,7 @@ import android.view.View
 import android.widget.Toast
 import com.example.mylocationlogapp.BaseActivity
 import com.example.mylocationlogapp.R
+import com.example.mylocationlogapp.helper.MySharedPref
 import com.example.mylocationlogapp.modal.MyUser
 import io.realm.Realm
 import kotlinx.android.synthetic.main.activity_main_login.*
@@ -29,6 +30,12 @@ class LoginActivity : BaseActivity() {
                 loginFunction()
             }
         })
+
+        if(MySharedPref.getIsLoggedIn()!!){
+            val intent = Intent(this,DashboardActivity::class.java)
+            startActivity(intent)
+            finish()
+        }
     }
 
     private fun loginFunction() {
@@ -46,6 +53,10 @@ class LoginActivity : BaseActivity() {
             //goto dashboard
             logd(TAG,"id:"+loginInfo.id)
             Toast.makeText(this,"Login was successfull",Toast.LENGTH_SHORT).show()
+            MySharedPref.setCurrentUserId(loginInfo.id)
+            MySharedPref.setIsLoggedIn(true)
+            val intent =Intent(this,DashboardActivity::class.java)
+            startActivity(intent)
         }
 
        /*

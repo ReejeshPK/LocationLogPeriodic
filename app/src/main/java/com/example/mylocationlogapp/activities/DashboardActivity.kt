@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.View
 import com.example.mylocationlogapp.BaseActivity
 import com.example.mylocationlogapp.R
+import com.example.mylocationlogapp.helper.MySharedPref
 
 class DashboardActivity : BaseActivity() {
 
@@ -20,5 +21,10 @@ class DashboardActivity : BaseActivity() {
         startActivity(intent)
     }
 
-    fun logoutFunction(view: View) {}
+    fun logoutFunction(view: View) {
+        MySharedPref.clearAllPrefs()
+        val intent : Intent = Intent(this,LoginActivity::class.java)
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        startActivity(intent)
+    }
 }

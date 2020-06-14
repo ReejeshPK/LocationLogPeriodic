@@ -17,9 +17,11 @@ object MySharedPref {
         editor?.putBoolean(PREF_ISLOGGEDIN, isLoggedIn)
         editor?.apply()
     }
-    fun setCurrentUserId(currentUserId: Int) {
+    fun setCurrentUserId(currentUserId: Int?) {
         val editor = PREFERENCES?.edit()
-        editor?.putInt(PREF_ISLOGGEDIN, currentUserId)
+        if (currentUserId != null) {
+            editor?.putInt(PREF_ISLOGGEDIN, currentUserId)
+        }
         editor?.apply()
     }
 
@@ -32,8 +34,7 @@ object MySharedPref {
     }
 
     fun clearAllPrefs() {
-        val editor = PREFERENCES?.edit()
-        editor?.clear()
+        PREFERENCES?.edit()?.clear()?.apply()
     }
 
 }
