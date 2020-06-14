@@ -43,6 +43,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/register"
+        android:onClick="moveToRegister"
         app:layout_constraintTop_toTopOf="@id/loginBtn"
         app:layout_constraintStart_toEndOf="@id/loginBtn"
         app:layout_constraintEnd_toEndOf="parent"/>

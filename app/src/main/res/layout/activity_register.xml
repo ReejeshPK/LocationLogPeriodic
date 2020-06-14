@@ -13,7 +13,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_margin="@dimen/edt_margin"
-        android:text="@string/enter_user_name"
+        android:hint="@string/enter_user_name"
         android:layout_width="0dp"
         android:inputType="text"
         android:layout_height="wrap_content"/>
@@ -37,6 +37,7 @@
         android:hint="@string/enter_the_password_again"
         android:inputType="textPassword"
         android:layout_width="0dp"
+        android:layout_margin="@dimen/edt_margin"
         android:layout_height="wrap_content"/>
 
     <Button

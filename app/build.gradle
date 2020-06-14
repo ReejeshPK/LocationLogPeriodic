@@ -1,6 +1,9 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
+//this order matters a lot after kapt, realm should come
+apply plugin: 'kotlin-kapt'/*Kotlin Annotation Processing Tool*/
+apply plugin: 'realm-android'
 
 android {
     compileSdkVersion 29
