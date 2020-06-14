@@ -28,9 +28,26 @@ class RegisterActivity : BaseActivity() {
 
         signUpButton.setOnClickListener( View.OnClickListener {
             if(formValid()){
-                signUpFunction()
+                if(!userAlreadyExists()) {
+                    signUpFunction()
+                }
+                else{
+                    Toast.makeText(this,"User Name Already Exists, Kindly try a different name",Toast.LENGTH_LONG).show()
+                }
             }
         })
+
+    }
+
+    private fun userAlreadyExists(): Boolean {
+
+        val myUser=realm.where(MyUser::class.java).equalTo("userName",userNameEditTextRegister.text.toString()).findFirst()
+        if(myUser==null){
+            return false;
+        }
+        else{
+            return true;
+        }
 
     }
 

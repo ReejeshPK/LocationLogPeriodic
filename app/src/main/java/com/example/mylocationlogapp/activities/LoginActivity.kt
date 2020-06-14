@@ -1,22 +1,35 @@
 package com.example.mylocationlogapp.activities
 
 import android.Manifest
+import android.app.Activity
+import android.content.Context
+import android.content.DialogInterface
+
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Color
+import android.location.LocationManager
 import android.net.Uri
 import android.os.Bundle
 import android.provider.Settings
 import android.view.View
+import android.view.inputmethod.EditorInfo
+import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import com.example.mylocationlogapp.BaseActivity
-import com.example.mylocationlogapp.BuildConfig
+
 import com.example.mylocationlogapp.MyBackgroundLocationService
 import com.example.mylocationlogapp.R
 import com.example.mylocationlogapp.helper.MySharedPref
 import com.example.mylocationlogapp.modal.MyUser
+import com.google.android.material.snackbar.Snackbar
+import io.realm.BuildConfig
 import io.realm.Realm
 import kotlinx.android.synthetic.main.activity_main_login.*
+
 
 class LoginActivity : BaseActivity() {
 
@@ -34,13 +47,17 @@ class LoginActivity : BaseActivity() {
         realm.commitTransaction()
 
         loginBtn.setOnClickListener(View.OnClickListener {
-            if (validFields()) {
-                //check the location permission also
-                if(checkPermissions()) {
-                    loginFunction()
-                }
-            }
+            loginBasic()
         })
+
+        passwordEditText.setOnEditorActionListener { v, actionId, event ->
+            if(actionId == EditorInfo.IME_ACTION_DONE){
+                loginBasic()
+                true
+            } else {
+                false
+            }
+        }
 
         if(MySharedPref.getIsLoggedIn()!!){
             val intent = Intent(this,DashboardActivity::class.java)
@@ -49,16 +66,39 @@ class LoginActivity : BaseActivity() {
         }
     }
 
+    private fun loginBasic() {
+        if (validFields()) {
+            //check the location permission also
+            if(checkPermissions()) {
+                if(checkGps()) {
+                    loginFunction()
+                }else{
+                    checkGPSEnable()
+                }
+            }
+            else{
+                requestPermissions()
+            }
+        }
+    }
+
     private fun loginFunction() {
 
         var loginInfo: MyUser? = null
+        var loginInfoUserName: MyUser? = null
+
+        loginInfoUserName =realm.where(MyUser::class.java).equalTo("userName", userNameEditText.text.toString()).findFirst()
 
         loginInfo =realm.where(MyUser::class.java).equalTo("userName", userNameEditText.text.toString())
             .equalTo("password", passwordEditText.text.toString()).findFirst()
 
-        if(loginInfo==null){
+        if((loginInfoUserName!=null)&&(loginInfo==null)) {
+            //means passworkd is wrong
+            Toast.makeText(this,"Kindly Check your Credentials",Toast.LENGTH_SHORT).show()
+        }
+        else if(loginInfo==null){
             //mens user not found
-            Toast.makeText(this,"User Not Found",Toast.LENGTH_SHORT).show()
+            Toast.makeText(this,"Kindly Register to Login",Toast.LENGTH_SHORT).show()
         }
         else{
             //goto dashboard
@@ -125,6 +165,7 @@ class LoginActivity : BaseActivity() {
         return permissionState == PackageManager.PERMISSION_GRANTED
     }
 
+    var userAskAgain:Boolean=false;
     private fun requestPermissions() {
         val shouldProvideRationale = ActivityCompat.shouldShowRequestPermissionRationale(
             this,
@@ -132,10 +173,10 @@ class LoginActivity : BaseActivity() {
         )
         // Provide an additional rationale to the user. This would happen if the user denied the
         // request previously, but didn't check the "Don't ask again" checkbox.
-        if (shouldProvideRationale) {
+        if (shouldProvideRationale&& !userAskAgain) {
             logd(TAG, "Displaying permission rationale to provide additional context.")
 
-            showSnackbar(R.string.permission_rationale, android.R.string.ok,
+            showSnackbarForLoc(R.string.permission_rationale, android.R.string.ok,
                 View.OnClickListener {
                     // Request permission
                     startLocationPermissionRequest()
@@ -206,8 +247,73 @@ class LoginActivity : BaseActivity() {
     private fun showMessage(text: String) {
         Toast.makeText(this, text, Toast.LENGTH_LONG).show()
     }
+    private fun showSnackbarForLoc(mainTextStringId: Int, actionStringId: Int,
+                             listener: View.OnClickListener) {
+      /*  Toast.makeText(this, resources.getString(mainTextStringId), Toast.LENGTH_LONG).show()*/
+
+        val parentLayout = findViewById<View>(R.id.myLoginLayout)
+
+        hideKeyboard(parentLayout)
+        val snackBar = Snackbar.make(parentLayout, resources.getString(mainTextStringId), Snackbar.LENGTH_LONG)
+            .setAction("Request Permission") {
+                userAskAgain=true;
+                requestPermissions()
+            }
+        snackBar.setActionTextColor(Color.WHITE)
+        val snackBarView = snackBar.view
+        /*val textView =
+            snackBarView.findViewById<TextView>(androidx.R.id.snackbar_text)
+        textView.setTextColor(Color.RED)*/
+        snackBar.show()
+    }
+
     private fun showSnackbar(mainTextStringId: Int, actionStringId: Int,
                              listener: View.OnClickListener) {
-        Toast.makeText(this, resources.getString(mainTextStringId), Toast.LENGTH_LONG).show()
+
+        /*  Toast.makeText(this, resources.getString(mainTextStringId), Toast.LENGTH_LONG).show()*/
+        val parentLayout = findViewById<View>(R.id.myLoginLayout)
+        hideKeyboard(parentLayout)
+        val snackBar = Snackbar.make(parentLayout, resources.getString(mainTextStringId), Snackbar.LENGTH_LONG)
+            .setAction("Grant Permission") {
+
+                requestPermissions()
+            }
+        snackBar.setActionTextColor(Color.GREEN)
+        val snackBarView = snackBar.view
+        /*val textView =
+            snackBarView.findViewById<TextView>(androidx.R.id.snackbar_text)
+        textView.setTextColor(Color.RED)*/
+        snackBar.show()
+    }
+
+    fun Context.hideKeyboard(view: View) {
+        val inputMethodManager = getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+        inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
+    }
+
+
+    fun checkGps():Boolean{
+        val manager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
+        if (!manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+            return false;
+        }
+        else{
+            return true;
+        }
+    }
+
+    private fun checkGPSEnable() {
+        val dialogBuilder = AlertDialog.Builder(this)
+        dialogBuilder.setMessage("Your GPS seems to be disabled, kindly enable it, set it to High Accuracy")
+            .setCancelable(false)
+            .setPositiveButton("Ok", DialogInterface.OnClickListener { dialog, id
+                ->
+                startActivity(Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS))
+            })
+            .setNegativeButton("No", DialogInterface.OnClickListener { dialog, id ->
+                dialog.cancel()
+            })
+        val alert = dialogBuilder.create()
+        alert.show()
     }
 }

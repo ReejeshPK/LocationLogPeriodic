@@ -34,7 +34,7 @@ class MyBackgroundLocationService : Service() {
 
     private lateinit var latLng:LatLng
 
-    private val LOCATION_UPDATE_INTERVAL :Long=1000*1*60; //15seconds
+    private val LOCATION_UPDATE_INTERVAL :Long=1000*10; //15seconds
 
     companion object {
         /*This companion is like static in java*/
@@ -55,6 +55,7 @@ class MyBackgroundLocationService : Service() {
 
     override fun onCreate() {
         super.onCreate()
+        MyApplicationClass.globalLog(TAG,"oncreate service")
         realm = Realm.getDefaultInstance()
 
         realm.beginTransaction()
@@ -75,7 +76,7 @@ class MyBackgroundLocationService : Service() {
             }
         }
 
-        locationRequest=LocationRequest().setInterval(LOCATION_UPDATE_INTERVAL)
+        locationRequest=LocationRequest().setInterval(LOCATION_UPDATE_INTERVAL).setFastestInterval(LOCATION_UPDATE_INTERVAL)
 
         startLocationUpdates()
     }

@@ -25,6 +25,6 @@
     <string name="permission_denied_explanation">Location Permission Denied</string>
     <string name="settings">Check Settings</string>
     <string name="no_location_detected">Location Not Detected</string>
-    <string name="permission_rationale">This App requires location permission to get your current location</string>
+    <string name="permission_rationale">Location Permission Required</string>
     <string name="title_activity_maps_with_play">Map</string>
 </resources>
