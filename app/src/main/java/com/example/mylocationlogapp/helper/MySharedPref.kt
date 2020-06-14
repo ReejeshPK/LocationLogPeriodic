@@ -20,7 +20,7 @@ object MySharedPref {
     fun setCurrentUserId(currentUserId: Int?) {
         val editor = PREFERENCES?.edit()
         if (currentUserId != null) {
-            editor?.putInt(PREF_ISLOGGEDIN, currentUserId)
+            editor?.putInt(PREF_USERID, currentUserId)
         }
         editor?.apply()
     }

@@ -7,12 +7,15 @@ import android.view.View
 import com.example.mylocationlogapp.BaseActivity
 import com.example.mylocationlogapp.R
 import com.example.mylocationlogapp.helper.MySharedPref
+import kotlinx.android.synthetic.main.activity_dashboard.*
 
 class DashboardActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_dashboard)
+
+        loggedInAs.setText("User ID:${MySharedPref.getCurrentUserId()}")
     }
 
     fun moveToMapCurrentLocation(view: View) {}
