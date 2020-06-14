@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">MyLocationLogApp</string>
+    <string name="user_name">User Name</string>
+    <string name="password">Password</string>
+    <string name="login">Login</string>
+    <string name="register">Register</string>
+    <string name="enter_user_name">Enter User Name</string>
+    <string name="enter_a_new_password">Enter a New Password</string>
+    <string name="enter_the_password_again">Enter the password again</string>
 </resources>
