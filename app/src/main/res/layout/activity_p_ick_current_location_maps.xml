@@ -27,12 +27,14 @@
         android:text="@string/save_location"
         android:layout_gravity="center|bottom"
         android:layout_marginBottom="25dp"
+        android:onClick="saveTheLocation"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
 
     <TextView
         android:id="@+id/myCurrentLocationText"
         android:layout_gravity="center|top"
+
         android:layout_marginTop="5dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>

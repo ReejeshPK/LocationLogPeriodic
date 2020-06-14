@@ -53,7 +53,7 @@ class RegisterActivity : BaseActivity() {
             myuser.userName=userNameEditTextRegister.text.toString()
             myuser.password=passwordEditTextRegister.text.toString()
 
-            it.insertOrUpdate(myuser)
+            it.insert(myuser)
         },{
             //on success
             Toast.makeText(this,"Registered Successfully",Toast.LENGTH_SHORT).show()

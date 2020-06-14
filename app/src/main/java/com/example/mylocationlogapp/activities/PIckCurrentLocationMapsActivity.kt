@@ -8,12 +8,15 @@ import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.Settings
+import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import com.example.mylocationlogapp.BaseActivity
 import com.example.mylocationlogapp.BuildConfig
 import com.example.mylocationlogapp.R
+import com.example.mylocationlogapp.helper.MySharedPref
+import com.example.mylocationlogapp.modal.MyLocationModal
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 
@@ -24,7 +27,9 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
+import io.realm.Realm
 import kotlinx.android.synthetic.main.activity_p_ick_current_location_maps.*
+import java.util.*
 
 class PIckCurrentLocationMapsActivity : BaseActivity(), OnMapReadyCallback {
 
@@ -35,6 +40,9 @@ class PIckCurrentLocationMapsActivity : BaseActivity(), OnMapReadyCallback {
     private var mFusedLocationClient: FusedLocationProviderClient? = null
     protected var mLastLocation: Location? = null
 
+    //realm
+    private lateinit var realm : Realm
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_p_ick_current_location_maps)
@@ -43,8 +51,13 @@ class PIckCurrentLocationMapsActivity : BaseActivity(), OnMapReadyCallback {
             .findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
+
+        realm= Realm.getDefaultInstance()
+
+        realm.beginTransaction()
+        realm.commitTransaction()
     }
-    
+
 
     /**
      * Manipulates the map once available.
@@ -57,11 +70,6 @@ class PIckCurrentLocationMapsActivity : BaseActivity(), OnMapReadyCallback {
      */
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
-
-        // Add a marker in Sydney and move the camera
-        /* val sydney = LatLng(-34.0, 151.0)
-         mMap.addMarker(MarkerOptions().position(sydney).title("Marker in Sydney"))
-         mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney))*/
 
         mMap.setOnCameraIdleListener {
             logd(TAG, "change")
@@ -93,7 +101,6 @@ class PIckCurrentLocationMapsActivity : BaseActivity(), OnMapReadyCallback {
             this,
             Manifest.permission.ACCESS_COARSE_LOCATION
         )
-
         // Provide an additional rationale to the user. This would happen if the user denied the
         // request previously, but didn't check the "Don't ask again" checkbox.
         if (shouldProvideRationale) {
@@ -171,6 +178,7 @@ class PIckCurrentLocationMapsActivity : BaseActivity(), OnMapReadyCallback {
     }
 
     private fun getLastLocation() {
+        //this is just for focusing on the current location
         mFusedLocationClient!!.lastLocation
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful && task.result != null) {
@@ -184,7 +192,7 @@ class PIckCurrentLocationMapsActivity : BaseActivity(), OnMapReadyCallback {
 
                     val curloc = LatLng(mLastLocation!!.latitude, mLastLocation!!.longitude)
                     mMap.addMarker(MarkerOptions().position(curloc).title("Marker in Current Location"))
-                    mMap.moveCamera(CameraUpdateFactory.newLatLng(curloc))
+                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(curloc,16.0f))
 
                 } else {
                     loge(TAG, "getLastLocation:exception" + task.exception)
@@ -200,6 +208,43 @@ class PIckCurrentLocationMapsActivity : BaseActivity(), OnMapReadyCallback {
     private fun showSnackbar(mainTextStringId: Int, actionStringId: Int,
                              listener: View.OnClickListener) {
         Toast.makeText(this, resources.getString(mainTextStringId), Toast.LENGTH_LONG).show()
+    }
+    /**End of location services*/
+
+    /**Realm startes here*/
+
+
+    fun saveTheLocation(view: View) {
+        logd(TAG,"onclick")
+        //just check if marker is moved or not
+        realm.executeTransactionAsync({
+            var lastInsertedId=it.where(MyLocationModal::class.java).max("id")
+            /*We are doing this since realm does not have auto increment feature*/
+            var nextId : Int ?=null
+            if(lastInsertedId==null){
+                nextId=1;
+                Log.d(TAG,"first insert")
+            }
+            else{
+                nextId=lastInsertedId.toInt()+1
+                logd(TAG,"next insert"+nextId)
+            }
+
+            var myLocationInfo=MyLocationModal()
+            myLocationInfo.dateTime= Date()
+            myLocationInfo.id=nextId
+            myLocationInfo.latitude=latLng?.latitude
+            myLocationInfo.longitude=latLng?.longitude
+            myLocationInfo.user_id=MySharedPref.getCurrentUserId()
+
+            it.insert(myLocationInfo)
+
+        },{
+            showMessage("Location Saved!")
+        },{
+            showMessage("Something went wrong, please try again")
+            loge(TAG,"erro:"+it.message)
+        })
     }
 }
 
