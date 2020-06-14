@@ -3,6 +3,7 @@ package com.example.mylocationlogapp.activities
 import android.os.AsyncTask
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.Toast
 import com.example.mylocationlogapp.BaseActivity
 import com.example.mylocationlogapp.R
 import com.example.mylocationlogapp.helper.MyConstants
@@ -29,6 +30,8 @@ class MapsActivityWithPlay : BaseActivity(), OnMapReadyCallback {
     private var selectedLocation: MyLocationModal? = null
     var locationListForThisUser: List<MyLocationModal>? = null
 
+    var isPlaying: Boolean = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_maps_with_play)
@@ -48,8 +51,20 @@ class MapsActivityWithPlay : BaseActivity(), OnMapReadyCallback {
 
         }
 
+        var myAsyncTask = navigateAndPlayTask()
         playButton.setOnClickListener({
-            navigateAndPlayTask().execute()
+
+            if (!isPlaying) {
+                playButton.setImageResource(R.drawable.ic_stop)
+                myAsyncTask = navigateAndPlayTask()
+                myAsyncTask.execute()
+                isPlaying = true;
+            } else {
+                playButton.setImageResource(R.drawable.ic_play_arrow)
+                myAsyncTask.cancel(true)
+                isPlaying = false
+                //Toast.makeText(this,"Please W",Toast.LENGTH_SHORT).show()
+            }
 
         })
 
@@ -91,7 +106,9 @@ class MapsActivityWithPlay : BaseActivity(), OnMapReadyCallback {
         // List<MyLocationModal>
         override fun onPreExecute() {
             super.onPreExecute()
-
+            runOnUiThread({
+                mMap.clear()
+            })
         }
 
         override fun doInBackground(vararg params: Void?): String {
@@ -125,6 +142,12 @@ class MapsActivityWithPlay : BaseActivity(), OnMapReadyCallback {
                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latlngg[0], 16.0f))
             })
 
+        }
+
+        override fun onPostExecute(result: String?) {
+            super.onPostExecute(result)
+            isPlaying = false
+            playButton.setImageResource(R.drawable.ic_play_arrow)
         }
 
     }
