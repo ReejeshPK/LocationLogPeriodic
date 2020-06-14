@@ -8,7 +8,7 @@
     <string name="enter_a_new_password">Enter a New Password</string>
     <string name="enter_the_password_again">Enter the password again</string>
     <string name="map_view_current_location">Map View Current Location</string>
-    <string name="show_list_track_locatino">Show List - Track Locatino</string>
+    <string name="show_list_track_locatino">Show List - Track Location</string>
     <string name="title_activity_location_list">LocationListActivity</string>
     <!-- Strings used for fragments for navigation -->
     <string name="first_fragment_label">First Fragment</string>
@@ -19,4 +19,7 @@
     <string name="hello_first_fragment">Hello first fragment</string>
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
     <string name="logout">Logout</string>
+    <string name="no_data_found">No Data Found</string>
+    <string name="title_activity_p_ick_current_location_maps">Map</string>
+    <string name="save_location">Save Location</string>
 </resources>

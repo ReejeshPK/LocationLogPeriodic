@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-    <fragment
+   <!-- <fragment
         android:id="@+id/nav_host_fragment"
         android:name="androidx.navigation.fragment.NavHostFragment"
         android:layout_width="0dp"
@@ -15,5 +15,24 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:navGraph="@navigation/nav_graph" />
+        app:navGraph="@navigation/nav_graph" />-->
+
+
+   <androidx.recyclerview.widget.RecyclerView
+       android:id="@+id/myLocationRecyclerView"
+       app:layout_constraintTop_toTopOf="parent"
+       app:layout_constraintStart_toStartOf="parent"
+       android:layout_width="match_parent"
+       android:layout_height="match_parent"/>
+
+   <TextView
+       android:id="@+id/noDataText"
+       android:text="@string/no_data_found"
+       app:layout_constraintTop_toTopOf="parent"
+       app:layout_constraintBottom_toBottomOf="parent"
+       app:layout_constraintStart_toStartOf="parent"
+       app:layout_constraintEnd_toEndOf="parent"
+       android:layout_width="wrap_content"
+       android:layout_height="wrap_content"/>
+
 </androidx.constraintlayout.widget.ConstraintLayout>
