@@ -42,6 +42,12 @@ class LocationListActivity : BaseActivity() {
 
 
 
+
+    }
+
+    override fun onResume() {
+        super.onResume()
+        //to refresh
         getLastLocationsForThisUser()
     }
 
@@ -53,7 +59,7 @@ class LocationListActivity : BaseActivity() {
                 noDataText.visibility= View.INVISIBLE
                 myLocationRecyclerView.apply {
                     layoutManager = LinearLayoutManager(context)
-                    adapter = MyLocationAdapter(myLocationList)
+                    adapter = MyLocationAdapter(myLocationList,context)
                 }
 
             }

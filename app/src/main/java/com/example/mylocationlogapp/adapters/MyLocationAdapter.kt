@@ -1,22 +1,30 @@
 package com.example.mylocationlogapp.adapters
 
+import android.content.Context
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.example.mylocationlogapp.R
+import com.example.mylocationlogapp.activities.MapsActivityWithPlay
+import com.example.mylocationlogapp.helper.MyConstants
 import com.example.mylocationlogapp.modal.MyLocationModal
 
-class MyLocationAdapter(val myLocationList: List<MyLocationModal>?) :
+class MyLocationAdapter(val myLocationList: List<MyLocationModal>?,val context :Context) :
     RecyclerView.Adapter<MyLocationAdapter.MyViewHolder>() {
 
     class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         var myLocationText: TextView? = null
+        var myLocationLayout: ConstraintLayout? = null
 
         init {
-            myLocationText = itemView.findViewById(R.id.latitudeAndLongitude);
+            myLocationText = itemView.findViewById(R.id.latitudeAndLongitude)
+            myLocationLayout = itemView.findViewById(R.id.myLocationLayoutItem)
         }
+
 
     }
 
@@ -38,5 +46,13 @@ class MyLocationAdapter(val myLocationList: List<MyLocationModal>?) :
         var oneLocation = myLocationList?.get(position)
         holder.myLocationText?.text =
             "Lat: ${oneLocation?.latitude}\nLng: ${oneLocation?.longitude}"
+
+        holder.myLocationLayout?.setOnClickListener({
+                val intent = Intent(context,MapsActivityWithPlay::class.java)
+            if (oneLocation != null) {
+                intent.putExtra(MyConstants.INTENT_EXTRA_LOCATION_POS,oneLocation.id)
+            }
+            context.startActivity(intent)
+        })
     }
 }
