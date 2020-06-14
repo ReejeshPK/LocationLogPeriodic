@@ -15,6 +15,7 @@ import com.example.mylocationlogapp.BaseActivity
 import com.example.mylocationlogapp.BuildConfig
 import com.example.mylocationlogapp.R
 import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
 
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -41,7 +42,9 @@ class PIckCurrentLocationMapsActivity : BaseActivity(), OnMapReadyCallback {
         val mapFragment = supportFragmentManager
             .findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
+        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
     }
+    
 
     /**
      * Manipulates the map once available.
@@ -196,7 +199,7 @@ class PIckCurrentLocationMapsActivity : BaseActivity(), OnMapReadyCallback {
     }
     private fun showSnackbar(mainTextStringId: Int, actionStringId: Int,
                              listener: View.OnClickListener) {
-        Toast.makeText(this, getString(mainTextStringId), Toast.LENGTH_LONG).show()
+        Toast.makeText(this, resources.getString(mainTextStringId), Toast.LENGTH_LONG).show()
     }
 }
 

@@ -37,6 +37,7 @@ class LocationListActivity : BaseActivity() {
                 .setAction("Action", null).show()*/
             val intent =Intent(this,PIckCurrentLocationMapsActivity::class.java)
             startActivity(intent)
+
         }
 
 
