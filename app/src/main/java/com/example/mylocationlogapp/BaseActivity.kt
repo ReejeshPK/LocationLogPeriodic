@@ -8,14 +8,14 @@ open class BaseActivity :  AppCompatActivity(){
 
 
     companion object{
-        val isInProduction=false;
+
         fun loge(TAGS:String,message:String){
-            if(!isInProduction) {
+            if(!MyApplicationClass.isInProduction) {
                 Log.e(TAGS, message)
             }
         }
         fun logd(TAGS: String,message: String){
-            if(!isInProduction) {
+            if(!MyApplicationClass.isInProduction) {
                 Log.d(TAGS, message)
             }
         }

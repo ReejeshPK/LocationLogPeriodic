@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import com.example.mylocationlogapp.BaseActivity
+import com.example.mylocationlogapp.MyBackgroundLocationService
 import com.example.mylocationlogapp.R
 import com.example.mylocationlogapp.helper.MySharedPref
 import com.example.mylocationlogapp.modal.MyUser
@@ -57,6 +58,7 @@ class LoginActivity : BaseActivity() {
             MySharedPref.setIsLoggedIn(true)
             val intent =Intent(this,DashboardActivity::class.java)
             startActivity(intent)
+            MyBackgroundLocationService.startService(this,"Service Start")
         }
 
        /*

@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import com.example.mylocationlogapp.BaseActivity
+import com.example.mylocationlogapp.MyBackgroundLocationService
 import com.example.mylocationlogapp.R
 import com.example.mylocationlogapp.helper.MySharedPref
 import kotlinx.android.synthetic.main.activity_dashboard.*
@@ -25,6 +26,7 @@ class DashboardActivity : BaseActivity() {
     }
 
     fun logoutFunction(view: View) {
+        MyBackgroundLocationService.stopService(this)
         MySharedPref.clearAllPrefs()
         val intent : Intent = Intent(this,LoginActivity::class.java)
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
