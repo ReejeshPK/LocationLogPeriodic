@@ -15,6 +15,8 @@ import com.example.mylocationlogapp.listeners.ItemMoveCallbackListener
 import com.example.mylocationlogapp.listeners.OnStartDragListener
 import com.example.mylocationlogapp.modal.MyLocationModal
 import io.realm.Realm
+import io.realm.RealmResults
+import io.realm.kotlin.delete
 import kotlinx.android.synthetic.main.activity_location_list.*
 import kotlinx.android.synthetic.main.content_location_list.*
 
@@ -88,12 +90,21 @@ class LocationListActivity : BaseActivity(), OnStartDragListener,MyLocationAdapt
 
                         override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                             //noteViewModel.delete(noteAdapter.getNoteAt(viewHolder.adapterPosition))
+                            realm.executeTransaction {
+                                //it.delete(myLocationList.get(viewHolder.adapterPosition))
+                                val idToDelte:Int?=myLocationList.get(viewHolder.adapterPosition)?.id
+                                logd(TAG,"idtodelte:"+idToDelte)
+                                val result=it.where(MyLocationModal::class.java).equalTo("id",idToDelte).findFirst()
+                                result?.deleteFromRealm()
+                            }
+
                             adapter.removeThis(viewHolder.adapterPosition)
                             Toast.makeText(
                                 this@LocationListActivity,
                                 "Deleted",
                                 Toast.LENGTH_SHORT
                             ).show()
+
                         }
 
                     }
