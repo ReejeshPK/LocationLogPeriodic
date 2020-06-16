@@ -1,21 +1,34 @@
 package com.example.mylocationlogapp.adapters
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.example.mylocationlogapp.R
 import com.example.mylocationlogapp.activities.MapsActivityWithPlay
 import com.example.mylocationlogapp.helper.MyConstants
+import com.example.mylocationlogapp.listeners.ItemMoveCallbackListener
+import com.example.mylocationlogapp.listeners.OnStartDragListener
 import com.example.mylocationlogapp.modal.MyLocationModal
 import java.text.SimpleDateFormat
+import java.util.*
 
-class MyLocationAdapter(val myLocationList: List<MyLocationModal>?,val context :Context) :
-    RecyclerView.Adapter<MyLocationAdapter.MyViewHolder>() {
+class MyLocationAdapter(val context :Context,
+                        private val startDragListener: OnStartDragListener) :
+    RecyclerView.Adapter<MyLocationAdapter.MyViewHolder>(), ItemMoveCallbackListener.Listener {
+
+    private var myLocationList = emptyList<MyLocationModal>().toMutableList() //done for drag and drop requires this
+
+    fun setList(myLocationListFromActivity: List<MyLocationModal>) {
+        myLocationList.addAll(myLocationListFromActivity)
+    }
 
     val simpleDateFormat= SimpleDateFormat(MyConstants.MY_DATE_FORMAT,MyConstants.MYGLOBAL_LOCALE)
 
@@ -23,11 +36,13 @@ class MyLocationAdapter(val myLocationList: List<MyLocationModal>?,val context :
         var myLocationText: TextView? = null
         var dateTime: TextView? = null
         var myLocationLayout: ConstraintLayout? = null
+        var myDragIcon: ImageView? = null
 
         init {
             myLocationText = itemView.findViewById(R.id.latitudeAndLongitude)
             myLocationLayout = itemView.findViewById(R.id.myLocationLayoutItem)
             dateTime = itemView.findViewById(R.id.dateTime)
+            myDragIcon = itemView.findViewById(R.id.myDragIcon)
         }
 
 
@@ -47,6 +62,7 @@ class MyLocationAdapter(val myLocationList: List<MyLocationModal>?,val context :
         }
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         var oneLocation = myLocationList?.get(position)
         holder.myLocationText?.text =
@@ -61,5 +77,35 @@ class MyLocationAdapter(val myLocationList: List<MyLocationModal>?,val context :
             }
             context.startActivity(intent)
         })
+
+        holder.myDragIcon?.setOnTouchListener { _, event ->
+            if (event.action == MotionEvent.ACTION_DOWN) {
+                this.startDragListener.onStartDrag(holder)
+            }
+            return@setOnTouchListener true
+        }
+    }
+
+
+    fun removeThis(adapterPosition: Int) {
+        myLocationList.removeAt(adapterPosition)
+        notifyItemRemoved(adapterPosition)
+    }
+
+    override fun onRowMoved(fromPosition: Int, toPosition: Int) {
+        if (fromPosition < toPosition) {
+            for (i in fromPosition until toPosition) {
+                Collections.swap(myLocationList, i, i + 1)
+            }
+        } else {
+            for (i in fromPosition downTo toPosition + 1) {
+                Collections.swap(myLocationList, i, i - 1)
+            }
+        }
+        notifyItemMoved(fromPosition, toPosition)
+    }
+    override fun onRowSelected(itemViewHolder: MyViewHolder) {
+    }
+    override fun onRowClear(itemViewHolder: MyViewHolder) {
     }
 }

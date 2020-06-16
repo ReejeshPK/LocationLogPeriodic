@@ -23,6 +23,8 @@ import java.util.*
 
 class MyBackgroundLocationService : Service() {
 
+    /**This does not work on mi device wwhen killed, best to replace it with job intent service*/
+
     private val CHANNEL_ID = "ForegroundService"
     private val TAG:String =MyBackgroundLocationService::class.java.toString()
 
@@ -34,7 +36,7 @@ class MyBackgroundLocationService : Service() {
 
     private lateinit var latLng:LatLng
 
-    private val LOCATION_UPDATE_INTERVAL :Long=1000*10; //15 mins
+    private val LOCATION_UPDATE_INTERVAL :Long=1000*15*60; //15 mins
 
     companion object {
         /*This companion is like static in java*/

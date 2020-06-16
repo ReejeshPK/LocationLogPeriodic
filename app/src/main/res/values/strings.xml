@@ -27,4 +27,9 @@
     <string name="no_location_detected">Location Not Detected</string>
     <string name="permission_rationale">Location Permission Required</string>
     <string name="title_activity_maps_with_play">Map</string>
+
+
+    <string name="credits">
+    Icons made by <a href="https://www.flaticon.com/authors/pixelmeetup" title="Pixelmeetup">Pixelmeetup</a> from <a href="https://www.flaticon.com/" title="Flaticon"> www.flaticon.com</a>
+    </string>
 </resources>
