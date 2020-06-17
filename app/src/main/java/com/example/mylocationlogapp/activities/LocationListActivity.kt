@@ -8,7 +8,6 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.mylocationlogapp.BaseActivity
-import com.example.mylocationlogapp.MyApplicationClass
 import com.example.mylocationlogapp.R
 import com.example.mylocationlogapp.adapters.MyLocationAdapter
 import com.example.mylocationlogapp.helper.MySharedPref
@@ -16,9 +15,7 @@ import com.example.mylocationlogapp.listeners.ItemMoveCallbackListener
 import com.example.mylocationlogapp.listeners.OnStartDragListener
 import com.example.mylocationlogapp.modal.MyLocationModal
 import io.realm.Realm
-import io.realm.RealmResults
 import io.realm.Sort
-import io.realm.kotlin.delete
 import kotlinx.android.synthetic.main.activity_location_list.*
 import kotlinx.android.synthetic.main.content_location_list.*
 

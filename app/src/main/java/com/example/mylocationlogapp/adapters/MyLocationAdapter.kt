@@ -5,7 +5,6 @@ import android.content.Context
 import android.content.Intent
 import android.view.LayoutInflater
 import android.view.MotionEvent
-import android.view.MotionEvent.ACTION_CANCEL
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
@@ -24,7 +23,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 class MyLocationAdapter(
-    val context: Context,
+    val context: Context?,
     private val startDragListener: OnStartDragListener,
     private val myRecyclerEventsListener: MyRecyclerEventsListener
 ) :
@@ -88,11 +87,12 @@ class MyLocationAdapter(
         holder.dateTime?.setText(simpleDateFormat.format(oneLocation?.dateTime))
 
         holder.myLocationLayout?.setOnClickListener({
+            //todo:change it to communicate with fragment
             val intent = Intent(context, MapsActivityWithPlay::class.java)
             if (oneLocation != null) {
                 intent.putExtra(MyConstants.INTENT_EXTRA_LOCATION_POS, oneLocation.id)
             }
-            context.startActivity(intent)
+            context?.startActivity(intent)
         })
 
         holder.myDragIcon?.setOnTouchListener { _, event ->

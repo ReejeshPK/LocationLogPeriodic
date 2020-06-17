@@ -22,9 +22,6 @@
 
     <include layout="@layout/content_location_list" />
 
-
-
-
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab"
         android:layout_width="wrap_content"
