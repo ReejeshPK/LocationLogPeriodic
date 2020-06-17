@@ -60,7 +60,7 @@ class LoginActivity : BaseActivity() {
         }
 
         if(MySharedPref.getIsLoggedIn()!!){
-            val intent = Intent(this,DashboardActivity::class.java)
+            val intent = Intent(this,MyMainNewDashboardActivity::class.java)
             startActivity(intent)
             finish()
         }
@@ -106,7 +106,7 @@ class LoginActivity : BaseActivity() {
             Toast.makeText(this,"Login was successfull",Toast.LENGTH_SHORT).show()
             MySharedPref.setCurrentUserId(loginInfo.id)
             MySharedPref.setIsLoggedIn(true)
-            val intent =Intent(this,DashboardActivity::class.java)
+            val intent =Intent(this,MyMainNewDashboardActivity::class.java)
             startActivity(intent)
 
             MyBackgroundLocationService.startService(this,"Service Start")
