@@ -1,5 +1,6 @@
 package com.example.mylocationlogapp.activities
 
+import android.graphics.Color
 import android.os.AsyncTask
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -16,6 +17,7 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.gms.maps.model.PolylineOptions
 import io.realm.Realm
 import io.realm.Sort
 import kotlinx.android.synthetic.main.activity_maps_with_play.*
@@ -32,6 +34,7 @@ class MapsActivityWithPlay : BaseActivity(), OnMapReadyCallback {
     var locationListForThisUser: List<MyLocationModal>? = null
 
     var isPlaying: Boolean = false
+    var polyLineOptions:PolylineOptions?=null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -109,6 +112,7 @@ class MapsActivityWithPlay : BaseActivity(), OnMapReadyCallback {
             super.onPreExecute()
             runOnUiThread({
                 mMap.clear()
+                polyLineOptions= PolylineOptions().width(5.0f).color(Color.BLUE).geodesic(true)
             })
         }
 
@@ -142,6 +146,8 @@ class MapsActivityWithPlay : BaseActivity(), OnMapReadyCallback {
             runOnUiThread({
                 mMap.addMarker(MarkerOptions().position(latlngg[0]!!).title("Marker in Selected Location"))
                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latlngg[0], 16.0f))
+                polyLineOptions?.add(latlngg[0])
+                mMap.addPolyline(polyLineOptions)
             })
 
         }

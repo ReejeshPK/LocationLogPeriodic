@@ -1,5 +1,6 @@
 package com.example.mylocationlogapp.fragments
 
+import android.graphics.Color
 import android.os.AsyncTask
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -20,6 +21,7 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.gms.maps.model.PolylineOptions
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import io.realm.Realm
 import io.realm.Sort
@@ -42,6 +44,8 @@ class MyMapsFragment : BaseFragment(), OnMapReadyCallback {
 
     var isPlaying: Boolean = false
 
+    var polyLineOptions:PolylineOptions?=null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
       /*  arguments?.let {
@@ -59,11 +63,14 @@ class MyMapsFragment : BaseFragment(), OnMapReadyCallback {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
+        polyLineOptions=PolylineOptions().width(5.0f).color(Color.BLUE).geodesic(true)
 
         val view: View =  inflater.inflate(R.layout.fragment_my_maps, container, false)
         val mapFragment = childFragmentManager
             .findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
+
+
 
         val playButton:FloatingActionButton=view.findViewById(R.id.playButton)
 
@@ -160,6 +167,7 @@ class MyMapsFragment : BaseFragment(), OnMapReadyCallback {
             logd(TAG,"onPreExecute")
             activity?.runOnUiThread({
                 mMap.clear()
+                polyLineOptions=PolylineOptions().width(5.0f).color(Color.BLUE).geodesic(true)
             })
         }
 
@@ -200,6 +208,8 @@ class MyMapsFragment : BaseFragment(), OnMapReadyCallback {
             activity?.runOnUiThread({
                 mMap.addMarker(MarkerOptions().position(latlngg[0]!!).title("Marker in Selected Location"))
                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latlngg[0], 16.0f))
+                polyLineOptions?.add(latlngg[0])
+                mMap.addPolyline(polyLineOptions)
             })
         }
 
