@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.mylocationlogapp.BaseActivity
+import com.example.mylocationlogapp.MyApplicationClass
 import com.example.mylocationlogapp.R
 import com.example.mylocationlogapp.adapters.MyLocationAdapter
 import com.example.mylocationlogapp.helper.MySharedPref
@@ -181,6 +182,17 @@ class LocationListActivity : BaseActivity(), OnStartDragListener,MyLocationAdapt
         val idTo=myLocationListLocal.get(toPos).id
         val dataTo=myLocationListLocal.get(toPos)
         val tmpObj=dataFrom
+
+        val tmpOrderById:Int?=myLocationListLocal.get(fromPos).manual_order_by
+
+        realm.executeTransaction {
+            dataFrom.manual_order_by=dataTo.manual_order_by
+            it.insertOrUpdate(dataFrom)
+
+            dataTo.manual_order_by=tmpOrderById
+            it.insertOrUpdate(dataTo)
+            logd(TAG,"insert or udpate")
+        }
 
        /* realm.executeTransaction {
             //swap
