@@ -203,7 +203,7 @@ class PIckCurrentLocationMapsActivity : BaseActivity(), OnMapReadyCallback {
 
 
     private fun showMessage(text: String) {
-        Toast.makeText(this, text, Toast.LENGTH_LONG).show()
+        Toast.makeText(this, text, Toast.LENGTH_SHORT).show()
     }
     private fun showSnackbar(mainTextStringId: Int, actionStringId: Int,
                              listener: View.OnClickListener) {
