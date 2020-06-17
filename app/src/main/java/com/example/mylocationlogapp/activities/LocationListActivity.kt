@@ -177,11 +177,11 @@ class LocationListActivity : BaseActivity(), OnStartDragListener,MyLocationAdapt
             loge(TAG,"err:"+it.message)
         })*/
 
-        val idFrom=myLocationListLocal.get(fromPos).id
+        //val idFrom=myLocationListLocal.get(fromPos).id
         val dataFrom=myLocationListLocal.get(fromPos)
-        val idTo=myLocationListLocal.get(toPos).id
+       // val idTo=myLocationListLocal.get(toPos).id
         val dataTo=myLocationListLocal.get(toPos)
-        val tmpObj=dataFrom
+       // val tmpObj=dataFrom
 
         val tmpOrderById:Int?=myLocationListLocal.get(fromPos).manual_order_by
 

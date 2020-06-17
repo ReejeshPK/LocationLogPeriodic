@@ -19,6 +19,7 @@ import com.example.mylocationlogapp.helper.MyConstants
 import com.example.mylocationlogapp.listeners.ItemMoveCallbackListener
 import com.example.mylocationlogapp.listeners.OnStartDragListener
 import com.example.mylocationlogapp.modal.MyLocationModal
+import java.text.DecimalFormat
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -28,6 +29,8 @@ class MyLocationAdapter(
     private val myRecyclerEventsListener: MyRecyclerEventsListener
 ) :
     RecyclerView.Adapter<MyLocationAdapter.MyViewHolder>(), ItemMoveCallbackListener.Listener {
+
+    val df=DecimalFormat("#.#######")
 
     interface MyRecyclerEventsListener {
         fun onSwapPerformed(fromPos: Int, toPos: Int,myLocationList:List<MyLocationModal>)
@@ -75,10 +78,12 @@ class MyLocationAdapter(
     @SuppressLint("ClickableViewAccessibility")
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         var oneLocation = myLocationList?.get(position)
-        holder.myLocationText?.text =
-            "Lat: ${oneLocation?.latitude}\nLng: ${oneLocation?.longitude}"
         /*holder.myLocationText?.text =
-            "id:${oneLocation?.id}Lat: ${oneLocation?.latitude}\nLng: ${oneLocation?.longitude}"*/
+            "Lat: ${oneLocation?.latitude}\nLng: ${oneLocation?.longitude}"*/
+        var laStr=df.format(oneLocation.latitude)
+        var lngStr=df.format(oneLocation.longitude)
+        holder.myLocationText?.text =
+            "id:${oneLocation?.id}Lat: ${laStr}\nLng: ${lngStr}"
 
         holder.dateTime?.setText(simpleDateFormat.format(oneLocation?.dateTime))
 
