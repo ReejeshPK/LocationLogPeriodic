@@ -17,6 +17,7 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import io.realm.Realm
+import io.realm.Sort
 import kotlinx.android.synthetic.main.activity_maps_with_play.*
 
 class MapsActivityWithPlay : BaseActivity(), OnMapReadyCallback {
@@ -119,7 +120,8 @@ class MapsActivityWithPlay : BaseActivity(), OnMapReadyCallback {
                 realm2.commitTransaction()
 
                 var locationListForThis = realm2.where(MyLocationModal::class.java)
-                    .equalTo("user_id", MySharedPref.getCurrentUserId()).findAll()
+                    .equalTo("user_id", MySharedPref.getCurrentUserId()).sort("manual_order_by",
+                        Sort.ASCENDING).findAll()
                 locationListForThis.forEach({
                     var curLoc =
                         it.latitude?.let { it1 -> it.longitude?.let { it2 -> LatLng(it1, it2) } }

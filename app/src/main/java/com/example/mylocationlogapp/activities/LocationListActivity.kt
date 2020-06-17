@@ -16,6 +16,7 @@ import com.example.mylocationlogapp.listeners.OnStartDragListener
 import com.example.mylocationlogapp.modal.MyLocationModal
 import io.realm.Realm
 import io.realm.RealmResults
+import io.realm.Sort
 import io.realm.kotlin.delete
 import kotlinx.android.synthetic.main.activity_location_list.*
 import kotlinx.android.synthetic.main.content_location_list.*
@@ -62,7 +63,9 @@ class LocationListActivity : BaseActivity(), OnStartDragListener,MyLocationAdapt
 
     private fun getLastLocationsForThisUser() {
         //var myLocationList :List<MyLocationModal>?=null
-        var myLocationList=realm.where(MyLocationModal::class.java).equalTo("user_id",MySharedPref.getCurrentUserId()).findAll()
+        var myLocationList=realm.where(MyLocationModal::class.java).equalTo("user_id",MySharedPref.getCurrentUserId())
+            .sort("manual_order_by",
+            Sort.ASCENDING).findAll()
         if(myLocationList!=null) {
             var sizeList:Int= myLocationList?.size!!;
             if(sizeList > 0) {

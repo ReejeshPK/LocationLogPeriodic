@@ -12,4 +12,5 @@ open class MyLocationModal : RealmObject() {
     var latitude: Double? = null
     var longitude: Double? = null
     var dateTime: Date? = null
+    var manual_order_by: Int?=null
 }

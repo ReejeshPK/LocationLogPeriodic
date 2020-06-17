@@ -236,6 +236,7 @@ class PIckCurrentLocationMapsActivity : BaseActivity(), OnMapReadyCallback {
             myLocationInfo.latitude=latLng?.latitude
             myLocationInfo.longitude=latLng?.longitude
             myLocationInfo.user_id=MySharedPref.getCurrentUserId()
+            myLocationInfo.manual_order_by=nextId
 
             it.insert(myLocationInfo)
 

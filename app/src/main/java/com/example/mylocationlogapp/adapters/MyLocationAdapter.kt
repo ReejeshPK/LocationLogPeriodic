@@ -75,10 +75,10 @@ class MyLocationAdapter(
     @SuppressLint("ClickableViewAccessibility")
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         var oneLocation = myLocationList?.get(position)
-      /*  holder.myLocationText?.text =
-            "Lat: ${oneLocation?.latitude}\nLng: ${oneLocation?.longitude}"*/
         holder.myLocationText?.text =
-            "id:${oneLocation?.id}Lat: ${oneLocation?.latitude}\nLng: ${oneLocation?.longitude}"
+            "Lat: ${oneLocation?.latitude}\nLng: ${oneLocation?.longitude}"
+        /*holder.myLocationText?.text =
+            "id:${oneLocation?.id}Lat: ${oneLocation?.latitude}\nLng: ${oneLocation?.longitude}"*/
 
         holder.dateTime?.setText(simpleDateFormat.format(oneLocation?.dateTime))
 
